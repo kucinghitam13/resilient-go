@@ -17,12 +17,14 @@ test-shops:
 
 build-products:
 	@echo "build product service: ${PRODUCT_MAIN_FILE} ${PRODUCT_BINARY_PATH}"
-	go build ${PRODUCT_MAIN_FILE} -a -v -o ${PRODUCT_BINARY_PATH}
+	go build -a -o ${PRODUCT_BINARY_PATH} ${PRODUCT_MAIN_FILE}
 
 build-shops:
-	go build ${SHOP_MAIN_FILE} -a -v -o ${SHOP_BINARY_PATH}
+	go build -a -o ${SHOP_BINARY_PATH} ${SHOP_MAIN_FILE}
 
 docker-up:
+	build-products
+	build-shops
 	docker-compose up --build -d
 
 docker-down:
