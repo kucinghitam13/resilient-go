@@ -1,0 +1,12 @@
+server:
+  port: 3105
+service_products:
+  host: "localhost:3103"
+  http_timeout: 10000
+  url_get_products_by_shop: "/api/v1/shops/:d/products"
+  circuit_breaker:
+    name: "db"
+    max_request: 3
+    interval: 10
+    time_out: 5
+    consecutive_failures: 5

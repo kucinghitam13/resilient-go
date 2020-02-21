@@ -1,0 +1,44 @@
+version: "3.2"
+services:
+  postgres:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: service_name
+      POSTGRES_DB: shopDB
+      POSTGRES_PASSWORD: super_secret_pass
+    ports:
+      - "5757:5432"
+    volumes:
+      - ./.docker/pgdata:/var/lib/postgresql/data/resilient-go
+      - ./.docker/database_scripts:/docker-entrypoint-initdb.d
+  redis:
+    image: redis:4.0.8-alpine
+    container_name: redis
+    ports:
+      - 6378:6379
+  products:
+    image: products
+    build:
+      context: ./products-service/
+      dockerfile: dockerfile
+    volumes:
+      - "../.:/go/src/github.com/nahwinrajan/resilient-go/products-service"
+    ports:
+      - "3103:3103"
+    depends_on:
+      - postgres
+      - redis
+    container_name: products-svr
+  shops:
+    image: shops
+    build:
+      context: ./shops-service
+      dockerfile: dockerfile
+    volumes:
+      - "../.:/go/src/github.com/nahwinrajan/resilient-go/shops-service"
+    ports:
+      - "3105:3103"
+    depends_on:
+      - postgres
+      - redis
+    container_name: shops-svr

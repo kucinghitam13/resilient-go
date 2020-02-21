@@ -1,0 +1,14 @@
+server:
+  port: 3103
+database:
+  driver: "postgres"
+  connection: "user=service_name password=super_secret_pass! dbname=playground_go host=localhost port=5757 sslmode=disable"
+  maxOpenConnection: 500
+  maxIdleConnection: 20
+  maxIdleConnectionLifetime: 600
+  circuit_breaker:
+    name: "db"
+    max_request: 3
+    interval: 10
+    time_out: 5
+    consecutive_failures: 5

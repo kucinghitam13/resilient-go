@@ -1,0 +1,12 @@
+FROM golang:1.13.8-alpine3.11
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash git openssh
+
+WORKDIR /app
+
+COPY ./bin/shops-service .
+
+EXPOSE 3105
+
+CMD ["./shops-service"]
