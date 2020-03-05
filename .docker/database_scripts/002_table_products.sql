@@ -1,5 +1,3 @@
-USE "playground_go";
-
 BEGIN;
     CREATE SEQUENCE IF NOT EXISTS "public"."products_id_seq"
     INCREMENT 1

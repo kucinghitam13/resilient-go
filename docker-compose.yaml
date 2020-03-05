@@ -9,36 +9,30 @@ services:
     ports:
       - "5757:5432"
     volumes:
-      - ./.docker/pgdata:/var/lib/postgresql/data/resilient-go
       - ./.docker/database_scripts:/docker-entrypoint-initdb.d
+    container_name: "resilient-postgre"
   redis:
     image: redis:4.0.8-alpine
-    container_name: redis
+    container_name: "resilient-redis"
     ports:
-      - 6378:6379
+      - "6378:6379"
   products:
-    image: products
+    image: resilient-service-products
     build:
-      context: ./products-service/
-      dockerfile: dockerfile
-    volumes:
-      - "../.:/go/src/github.com/nahwinrajan/resilient-go/products-service"
+      context: ./products-service
     ports:
       - "3103:3103"
     depends_on:
       - postgres
       - redis
-    container_name: products-svr
+    container_name: "resilient-service-products"
   shops:
-    image: shops
+    image: resilient-service-shops
     build:
       context: ./shops-service
-      dockerfile: dockerfile
-    volumes:
-      - "../.:/go/src/github.com/nahwinrajan/resilient-go/shops-service"
     ports:
-      - "3105:3103"
+      - "3105:3105"
     depends_on:
       - postgres
       - redis
-    container_name: shops-svr
+    container_name: "resilient-service-shops"

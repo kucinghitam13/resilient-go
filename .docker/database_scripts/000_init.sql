@@ -1,1 +1,1 @@
-CREATE DATABASE IF NOT EXISTS "playground_go";
+CREATE DATABASE "playground_go";

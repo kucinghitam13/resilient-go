@@ -1,7 +1,25 @@
-FROM golang:1.13.8-alpine3.11
+FROM golang:1.13.8-alpine3.11 AS builder
 
-WORKDIR /go/src/github.com/nahwinrajan/resilient-go
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash git openssh && \
+    apk add --update make
+RUN wget -O /usr/bin/dep https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64 && \
+    chmod +x /usr/bin/dep
 
-RUN make build-shops
+COPY ./files/etc/products-service/products.development.yaml ./products.development.yaml
 
-ENTRYPOINT ["./shops-service/bin/products-service"]
+WORKDIR /go/src/github.com/nahwinrajan/resilient-go/products-service
+COPY Gopkg.toml Gopkg.lock ./
+RUN dep ensure -v -vendor-only
+
+COPY . .
+RUN make build
+
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+COPY --from=builder /go/src/github.com/nahwinrajan/resilient-go/products-service  .
+EXPOSE 3103
+
+ENTRYPOINT ["./bin/products-service"]

@@ -33,5 +33,6 @@ func main() {
 	// initiate usecase
 	products.NewTransportHTTP(pgDB, router)
 
+	log.Printf("Products Service Fired Up and Ready to Go!")
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", serverConfig.Port), router))
 }
